@@ -1,6 +1,9 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"GinWebService/model"
+)
 
 func main(){
 	//初始化路由
@@ -12,5 +15,6 @@ func main(){
 			ctx.Writer.WriteString("hello")
 		})
 	}
+	model.InitModel()
 	router.Run(":8081")
 }
