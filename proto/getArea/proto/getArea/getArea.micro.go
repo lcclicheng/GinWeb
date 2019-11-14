@@ -56,7 +56,7 @@ func NewGetAreaService(name string, c client.Client) GetAreaService {
 }
 
 func (c *getAreaService) MicroGetArea(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "GetArea.microGetArea", in)
+	req := c.c.NewRequest(c.name, "GetArea.MicroGetArea", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {

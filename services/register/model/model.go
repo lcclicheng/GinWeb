@@ -80,7 +80,7 @@ type OrderHouse struct {
 	Credit      bool                                     //表示个人征信情况 true表示良好
 }
 var GlobalDB *gorm.DB
-var GlobalRedis redis.Pool
+
 func InitDb()error{
 	//拼接链接字符串
 	connString:=conf.MysqlName+":"+conf.MysqlPwd+"@tcp("+conf.MysqlAddr+":"+conf.MysqlPort+")/"+conf.MtSqlDB+"?parseTime=true"
@@ -105,7 +105,7 @@ func InitDb()error{
 
 //初始化redis连接
 func InitRedis(){
-	GlobalRedis=redis.Pool{
+	RedisPool=redis.Pool{
 		MaxIdle:20,
 		MaxActive:50,
 		IdleTimeout:60*5,

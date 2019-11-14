@@ -3,28 +3,29 @@ package main
 import (
 	"github.com/micro/go-micro/util/log"
 	"github.com/micro/go-micro"
-	"GinWebService/services/getArea/handler"
-	getArea "GinWebService/services/getArea/proto/getArea"
-	"GinWebService/services/getArea/model"
+	"GinWebService/services/getImg/handler"
+	getImg "GinWebService/services/getImg/proto/getImg"
 	"github.com/micro/go-micro/registry/consul"
+	"GinWebService/services/getImg/model"
 )
 
 func main() {
-	model.InitDb()
-	model.InitRedis()
+	consulReg:=consul.NewRegistry()
 	// New Service
-	consulRegistry:=consul.NewRegistry()
+	model.InitRedis()
 	service := micro.NewService(
-		micro.Name("go.micro.srv.getArea"),
+		micro.Name("go.micro.srv.getImg"),
 		micro.Version("latest"),
-		micro.Registry(consulRegistry),
+		micro.Registry(consulReg),
+		micro.Address(":9981"),
 	)
 
 	// Initialise service
 	service.Init()
 
 	// Register Handler
-	getArea.RegisterGetAreaHandler(service.Server(), new(handler.GetArea))
+	getImg.RegisterGetImgHandler(service.Server(), new(handler.GetImg))
+
 
 	// Run service
 	if err := service.Run(); err != nil {

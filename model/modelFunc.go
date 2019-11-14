@@ -20,6 +20,7 @@ func GetArea()([]Area,error){
 	if len(areaByte)==0{
 		//从mysql拿数据
 		if err :=GlobalDB.Find(&areas).Error;err!=nil {
+			fmt.Println("err--find",err)
 			return areas,err
 		}
 		//序列化数据存入redis
@@ -28,7 +29,8 @@ func GetArea()([]Area,error){
 		if err != nil {
 			return nil,err
 		}
-		conn.Do("set","areaData",areajson)
+		_,err=conn.Do("set","areaData",areajson)
+		fmt.Println("conn.Do===>",err)
 		fmt.Println("从mysql中获取数据")
 	}else {
 		json.Unmarshal(areaByte,&areas)

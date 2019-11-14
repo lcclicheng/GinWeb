@@ -3,7 +3,7 @@ syntax = "proto3";
 package go.micro.srv.getArea;
 
 service GetArea {
-    rpc microGetArea (Request) returns (Response) {
+    rpc MicroGetArea (Request) returns (Response) {
     }
 }
 

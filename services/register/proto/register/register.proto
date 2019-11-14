@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package go.micro.srv.register;
+
+service Register {
+    rpc SmsCode (Request) returns (Response) {
+    };
+    rpc Register (RegRequset) returns (RegResponse) {
+    };
+    rpc Login (RegRequset) returns (RegResponse) {
+    };
+}
+message RegRequset {
+    string mobile = 1;
+    string password = 2;
+    string sms_code = 3;
+}
+message RegResponse {
+    string errno = 1;
+    string errmsg = 2;
+    string name=3;
+}
+message Request {
+    string mobile = 1;
+    string text = 2;
+    string uuid = 3;
+}
+
+message Response {
+    string errno = 1;
+    string errmsg = 2;
+}
