@@ -7,7 +7,27 @@ import (
 	"GinWebService/controller"
 	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-contrib/sessions"
+	"net/http"
+	"GinWebService/utils"
+	"time"
 )
+func Filter(ctx *gin.Context){
+	//登录校验
+	session:=sessions.Default(ctx)
+	userName:=session.Get("userName")
+	resp:=make(map[string]interface{})
+	if userName==nil{
+		resp["errno"]=utils.RECODE_SESSIONERR
+		resp["errmsg"]=utils.RecodeText(utils.RECODE_SESSIONERR)
+		ctx.JSON(http.StatusOK,resp)
+		ctx.Abort()
+		return
+	}
+	fmt.Println("=========",time.Now())
+	//执行函数
+	ctx.Next()
+	fmt.Println("-----------------------",time.Now())
+}
 
 func main(){
 	//初始化路由
@@ -22,11 +42,11 @@ func main(){
 	}
 	//初始化redis容器,存储session数据
 	store,_:=redis.NewStore(20,"tcp","127.0.0.1:6379","",[]byte("session"))
-	store.Options(
+	/*store.Options(
 		sessions.Options{
 			MaxAge:0,
 		},
-	)
+	)*/
 	router.Static("/home","view")
 	/*router.Use()
 	store,err:=redis.NewStore(20,"tcp","127.0.0.1:6379","",[]byte("session"))
@@ -58,13 +78,20 @@ func main(){
 	{
 		//路由规范
 		r1.GET("/areas",controller.GetArea)
-		r1.GET("/session",controller.GetSession)
 		r1.GET("/imagecode/:uuid",controller.GetImageCd)
 		r1.GET("/smscode/:mobile",controller.GetSmsCd)
 		r1.POST("/users",controller.PostRet)
+
 		r1.Use(sessions.Sessions("mysession",store))
+
+
 		//登录业务
-		r1.POST("/session",controller.PostLogin)
+		r1.POST("/sessions",controller.PostLogin)
+		r1.GET("/session",controller.GetSession)
+		r1.Use(Filter)
+		r1.DELETE("/session",controller.DeleteSession)
+		r1.GET("/user",controller.GetUserInfo)
+		r1.PUT("/user/name",controller.PutUserInfo)
 	}
 	router.Run(":8080")
 }
